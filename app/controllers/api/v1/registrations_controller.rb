@@ -1,7 +1,20 @@
 class Api::V1::RegistrationsController < ApplicationController
+
+   skip_before_action :authenticate_user!, only: [:create]  
+
     def create
-      user = User.new(user_params)
-  
+
+          # Find or create client
+          client = Client.find_or_create_by!(name: params[:user][:cname])
+
+          # Create user and associate client_id
+          user = User.new(user_params)
+          user.client_id = client.id
+          user.client_name = client.name
+          user.admin = true
+          user.task_creator = true
+
+
       if user.save
         token = generate_jwt_token(user)
         render json: { user: user, token: token }, status: :created
@@ -13,7 +26,7 @@ class Api::V1::RegistrationsController < ApplicationController
     private
   
     def user_params
-      params.require(:user).permit(:email, :password, :password_confirmation)
+      params.require(:user).permit(:name,:last_name,:email, :password, :password_confirmation)
     end
   
     def generate_jwt_token(user)

@@ -19,6 +19,18 @@ Rails.application.routes.draw do
         get "/check_auth", to: "sessions#check_auth"
       end
       post 'sign_up', to: 'registrations#create'
+      get 'users', to: 'users#index'
+      post 'add_user', to: 'users#add_user'
+
+      get 'tasks', to: 'tasks#index'
+      get 'messages', to: 'messages#index'
+      post 'add_message', to: 'messages#add_message'
+
+      post 'add_task', to: 'tasks#add_task'
+      get 'tasks_data', to: 'tasks#tasks_data'
+      
+
+
 
       # resources :tasks, only: [:index, :create]
     end

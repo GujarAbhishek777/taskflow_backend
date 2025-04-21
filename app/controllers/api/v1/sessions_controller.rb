@@ -19,7 +19,7 @@ class Api::V1::SessionsController < Devise::SessionsController
 
     if user && user.valid_password?(params[:password])
       token = generate_jwt_token(user)
-      render json: { user: { id: user.id, email: user.email }, token: token }, status: :ok
+      render json: { user: user, token: token }, status: :ok
     else
       render json: { error: "Invalid email or password" }, status: :unauthorized
     end
