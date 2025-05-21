@@ -10,7 +10,7 @@ class Api::V1::TasksController < ApplicationController
             tasks = if @current_user.admin
               tasks # admin sees all tasks
             elsif @current_user.task_creator
-              tasks.where(creator: @current_user.id)
+              tasks.where("creator = :user_id OR user_id = :user_id", user_id: @current_user.id)
             else
               tasks.where(user_id: @current_user.id)
             end
@@ -71,7 +71,7 @@ class Api::V1::TasksController < ApplicationController
           tasks = if @current_user.admin
             tasks # admin sees all tasks
           elsif @current_user.task_creator
-            tasks.where(creator: @current_user.id)
+            tasks.where("creator = :user_id OR user_id = :user_id", user_id: @current_user.id)
           else
             tasks.where(user_id: @current_user.id)
           end
