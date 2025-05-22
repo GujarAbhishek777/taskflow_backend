@@ -8,7 +8,7 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
-
+    root to: proc { [200, {}, ['Rails app is running']] }
   namespace :api do
     namespace :v1 do
       devise_for :users, path: '', controllers: {

@@ -19,7 +19,7 @@ default: &default
 
 development:
   <<: *default
-  database: taskflow
+  database: taskflow_production
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -51,9 +51,9 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    database: taskflow_backend_production
-    username: taskflow_backend
-    password: <%= ENV["TASKFLOW_BACKEND_DATABASE_PASSWORD"] %>
+    database: taskflow_production
+    username: root
+    password: Sumal@777
   cache:
     <<: *primary_production
     database: taskflow_backend_production_cache
