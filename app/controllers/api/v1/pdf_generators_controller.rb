@@ -1,5 +1,7 @@
 class Api::V1::PdfGeneratorsController < ApplicationController
 
+    skip_before_action :authenticate_user!, only: [:pdf_generator]
+
       def pdf_generator
            # In a real app, this data may come from current_user
                 data = {
