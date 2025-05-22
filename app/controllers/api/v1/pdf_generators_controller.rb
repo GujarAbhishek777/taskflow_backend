@@ -9,19 +9,26 @@ class Api::V1::PdfGeneratorsController < ApplicationController
 
            personal_info = form_data[:personalInfo] || {}
            education_info = form_data[:educationInfo] || {}
+           experiences = form_data[:addresses] || []
            projects = form_data[:projects] || []
            skills_info = form_data[:SkillsInfo] || {}
          
-           # Transform into expected structure
            data = {
              name: personal_info[:firstName] || "N/A",
              phone: personal_info[:phone] || "N/A",
              email: personal_info[:email] || "N/A",
-             education: "#{education_info[:degree]} - #{education_info[:college_university]} (#{education_info[:graduation_date]})",
-             work_experience: [], # You can extend this later
+             education: "#{education_info[:degree]} - #{education_info[:college_university]} #{education_info[:graduation_date]}".strip,
+             work_experience: experiences.map do |exp|
+               {
+                 title: exp[:position] || "N/A",
+                 company: exp[:company] || "N/A",
+                 date: "#{exp[:duration]} years",
+                 description: [exp[:responsibilities] || "N/A"]
+               }
+             end,
              projects: projects.map do |project|
                {
-                 title: project[:title] || "Untitled",
+                 title: project[:project_name] || "Untitled",
                  description: project[:description] || "No description"
                }
              end,
