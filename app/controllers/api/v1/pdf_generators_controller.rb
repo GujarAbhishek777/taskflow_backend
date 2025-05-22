@@ -4,27 +4,52 @@ class Api::V1::PdfGeneratorsController < ApplicationController
 
       def pdf_generator
            # In a real app, this data may come from current_user
-                data = {
-                    name: "John Doe",
-                    phone: "123-456-7890",
-                    email: "john@example.com",
-                    education: "B.Sc. Computer Science",
-                    work_experience: [
-                    {
-                        title: "Software Engineer",
-                        company: "Tech Corp",
-                        date: "2020-2024",
-                        description: ["Developed scalable backend services."]
-                    }
-                    ],
-                    projects: [
-                    {
-                        title: "AI Chatbot",
-                        description: "Built an AI-powered chatbot for customer support."
-                    }
-                    ],
-                    skills: "Ruby, Rails, JavaScript, React"
-                }
+
+           form_data = params.dig(:pdf_generator, :formData) || {}
+
+           personal_info = form_data[:personalInfo] || {}
+           education_info = form_data[:educationInfo] || {}
+           projects = form_data[:projects] || []
+           skills_info = form_data[:SkillsInfo] || {}
+         
+           # Transform into expected structure
+           data = {
+             name: personal_info[:firstName] || "N/A",
+             phone: personal_info[:phone] || "N/A",
+             email: personal_info[:email] || "N/A",
+             education: "#{education_info[:degree]} - #{education_info[:college_university]} (#{education_info[:graduation_date]})",
+             work_experience: [], # You can extend this later
+             projects: projects.map do |project|
+               {
+                 title: project[:title] || "Untitled",
+                 description: project[:description] || "No description"
+               }
+             end,
+             skills: skills_info[:technical_skills] || "N/A"
+           }
+
+           
+                # data = {
+                #     name: "John Doe",
+                #     phone: "123-456-7890",
+                #     email: "john@example.com",
+                #     education: "B.Sc. Computer Science",
+                #     work_experience: [
+                #     {
+                #         title: "Software Engineer",
+                #         company: "Tech Corp",
+                #         date: "2020-2024",
+                #         description: ["Developed scalable backend services."]
+                #     }
+                #     ],
+                #     projects: [
+                #     {
+                #         title: "AI Chatbot",
+                #         description: "Built an AI-powered chatbot for customer support."
+                #     }
+                #     ],
+                #     skills: "Ruby, Rails, JavaScript, React"
+                # }
             
                 pdf = ResumeMaker::Maker.new(data).generate_pdf
             
