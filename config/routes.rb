@@ -28,6 +28,8 @@ Rails.application.routes.draw do
 
       post 'add_task', to: 'tasks#add_task'
       get 'tasks_data', to: 'tasks#tasks_data'
+
+      get 'pdf_generator',to:'pdf_generators#pdf_generator'
       
 
 
