@@ -1,14 +1,30 @@
 Rails.application.routes.draw do
-  devise_for :users
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
 
   # Defines the root path route ("/")
-  # root "posts#index"
-    root to: proc { [200, {}, ['Rails app is running']] }
+  root to: proc { [200, {}, ['Rails app is running']] }
+
+  # Handlers for requests arriving without /api/v1 prefix (e.g. if reverse proxy strips /api/v1)
+  scope module: 'api/v1' do
+    post 'sign_in', to: 'sessions#create'
+    delete 'sign_out', to: 'sessions#destroy'
+    get 'check_auth', to: 'sessions#check_auth'
+    post 'sign_up', to: 'registrations#create'
+    get 'users', to: 'users#index'
+    post 'add_user', to: 'users#add_user'
+
+    get 'tasks', to: 'tasks#index'
+    get 'messages', to: 'messages#index'
+    post 'add_message', to: 'messages#add_message'
+
+    post 'add_task', to: 'tasks#add_task'
+    get 'tasks_data', to: 'tasks#tasks_data'
+
+    post 'pdf_generator', to: 'pdf_generators#pdf_generator'
+  end
+
+  # Handlers for requests arriving with /api/v1 prefix
   namespace :api do
     namespace :v1 do
       devise_for :users, path: '', controllers: {
@@ -29,14 +45,7 @@ Rails.application.routes.draw do
       post 'add_task', to: 'tasks#add_task'
       get 'tasks_data', to: 'tasks#tasks_data'
 
-      post 'pdf_generator',to:'pdf_generators#pdf_generator'
-      
-
-
-
-      # resources :tasks, only: [:index, :create]
+      post 'pdf_generator', to: 'pdf_generators#pdf_generator'
     end
   end
-
-  
 end
